@@ -1,6 +1,9 @@
 package com.notification.rest;
 
 import com.notification.service.NotificationService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,13 +18,17 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/")
+@Api
 public class NotificationController {
 
 	@Autowired
 	private NotificationService notificationService;
 
+	@ApiOperation(value = "Send a notification email")
 	@PostMapping("/send-notification")
-	public ResponseEntity<Map<String, Object>> sendEmail(@RequestBody Map<String, Object> messageDetails) {
+	public ResponseEntity<Map<String, Object>> sendEmail(
+			@ApiParam(value = "Message details", required = true)
+			@RequestBody Map<String, Object> messageDetails) {
 		boolean status = notificationService.sendEmailFromDetails(messageDetails);
 		Map<String, Object> response = new HashMap<>();
 		System.out.println(messageDetails);
